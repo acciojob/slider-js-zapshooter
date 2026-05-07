@@ -1,16 +1,295 @@
 <!DOCTYPE html>
-
-<html>
-
+<html lang="en">
 <head>
-	<link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Theme Slider</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@300;400&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Lato', sans-serif;
+      height: 100vh;
+      overflow: hidden;
+      background: #000;
+    }
+
+    .slider-container {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Each slide occupies full viewport, stacked vertically */
+    .slide {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      transform: translateY(100%);
+      transition: transform 0.75s cubic-bezier(0.77, 0, 0.175, 1);
+      will-change: transform;
+    }
+
+    .slide.active {
+      transform: translateY(0);
+    }
+
+    .slide.above {
+      transform: translateY(-100%);
+    }
+
+    /* Left text panel */
+    .left-slide {
+      width: 36%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 48px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .left-slide h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.15;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+    }
+
+    .left-slide p {
+      font-family: 'Lato', sans-serif;
+      font-size: clamp(0.85rem, 1.2vw, 1rem);
+      font-weight: 300;
+      color: rgba(255,255,255,0.75);
+      letter-spacing: 0.04em;
+    }
+
+    /* Right image panel */
+    .right-slide {
+      width: 64%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+
+    /* Slide-specific colors & images */
+    #slide-1 .left-slide { background: #d95f7a; }
+    #slide-1 .right-slide {
+      background-image: url('https://images.unsplash.com/photo-1490750967868-88df5691cc43?w=1200&q=80');
+    }
+
+    #slide-2 .left-slide { background: #2e86c1; }
+    #slide-2 .right-slide {
+      background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=80');
+    }
+
+    #slide-3 .left-slide { background: #2c3e50; }
+    #slide-3 .right-slide {
+      background-image: url('https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=1200&q=80');
+    }
+
+    #slide-4 .left-slide { background: #a04000; }
+    #slide-4 .right-slide {
+      background-image: url('https://images.unsplash.com/photo-1611689342806-0863700ce1e4?w=1200&q=80');
+    }
+
+    /* Navigation buttons — positioned at the seam of left/right panels */
+    .nav-buttons {
+      position: fixed;
+      left: calc(36% - 20px);
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 100;
+    }
+
+    .up-button,
+    .down-button {
+      width: 40px;
+      height: 40px;
+      background: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      color: #333;
+    }
+
+    .up-button:hover,
+    .down-button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 18px rgba(0,0,0,0.28);
+    }
+
+    .up-button:active,
+    .down-button:active {
+      transform: scale(0.96);
+    }
+
+    .up-button svg,
+    .down-button svg {
+      width: 16px;
+      height: 16px;
+      stroke: #444;
+      stroke-width: 2.2;
+      fill: none;
+    }
+
+    /* Slide counter dots */
+    .dots {
+      position: fixed;
+      right: 28px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 100;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.35);
+      transition: background 0.3s, transform 0.3s;
+      cursor: pointer;
+    }
+
+    .dot.active {
+      background: #fff;
+      transform: scale(1.4);
+    }
+  </style>
 </head>
-
 <body>
-	<!-- the entire body must be written by student -->
-    <script type="text/javascript" src="./script.js">
+
+<div class="slider-container">
+
+  <div class="slide active" id="slide-1">
+    <div class="left-slide">
+      <h1>Nature flower</h1>
+      <p>all in pink</p>
+    </div>
+    <div class="right-slide"></div>
+  </div>
+
+  <div class="slide" id="slide-2">
+    <div class="left-slide">
+      <h1>Bluuue Sky</h1>
+      <p>with it's mountains</p>
+    </div>
+    <div class="right-slide"></div>
+  </div>
+
+  <div class="slide" id="slide-3">
+    <div class="left-slide">
+      <h1>Lonely castle</h1>
+      <p>in the wilderness</p>
+    </div>
+    <div class="right-slide"></div>
+  </div>
+
+  <div class="slide" id="slide-4">
+    <div class="left-slide">
+      <h1>Flying eagle</h1>
+      <p>in the sunset</p>
+    </div>
+    <div class="right-slide"></div>
+  </div>
+
+</div>
+
+<!-- Navigation -->
+<div class="nav-buttons">
+  <button class="up-button" aria-label="Previous slide">
+    <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+  </button>
+  <button class="down-button" aria-label="Next slide">
+    <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+  </button>
+</div>
+
+<!-- Dots -->
+<div class="dots">
+  <div class="dot active" data-index="0"></div>
+  <div class="dot" data-index="1"></div>
+  <div class="dot" data-index="2"></div>
+  <div class="dot" data-index="3"></div>
+</div>
+
+<script>
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const dots   = Array.from(document.querySelectorAll('.dot'));
+  let current  = 0;
+  let animating = false;
+
+  function goTo(next) {
+    if (animating || next === current) return;
+    animating = true;
+
+    const prev = current;
+    const direction = next > prev ? 'down' : 'up';
+
+    // Position the incoming slide
+    slides[next].style.transition = 'none';
+    slides[next].classList.remove('active', 'above');
+    slides[next].style.transform = direction === 'down' ? 'translateY(100%)' : 'translateY(-100%)';
+
+    // Force reflow
+    slides[next].getBoundingClientRect();
+    slides[next].style.transition = '';
+
+    // Animate both
+    slides[next].classList.add('active');
+    slides[prev].style.transform = direction === 'down' ? 'translateY(-100%)' : 'translateY(100%)';
+    slides[prev].classList.remove('active');
+
+    // Update dots
+    dots[prev].classList.remove('active');
+    dots[next].classList.add('active');
+
+    current = next;
+
+    slides[next].addEventListener('transitionend', () => {
+      animating = false;
+    }, { once: true });
+  }
+
+  document.querySelector('.up-button').addEventListener('click', () => {
+    const prev = (current - 1 + slides.length) % slides.length;
+    goTo(prev);
+  });
+
+  document.querySelector('.down-button').addEventListener('click', () => {
+    const next = (current + 1) % slides.length;
+    goTo(next);
+  });
+
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => goTo(+dot.dataset.index));
+  });
+
+  // Keyboard navigation
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowUp')   goTo((current - 1 + slides.length) % slides.length);
+    if (e.key === 'ArrowDown') goTo((current + 1) % slides.length);
+  });
 </script>
-
 </body>
-
 </html>
